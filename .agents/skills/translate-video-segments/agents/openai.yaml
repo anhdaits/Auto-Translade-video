@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dịch transcript video"
+  short_description: "Dịch transcript và tiếp tục pipeline video"
+  default_prompt: "Use $translate-video-segments to translate a video transcript to Vietnamese and resume the dubbing pipeline."

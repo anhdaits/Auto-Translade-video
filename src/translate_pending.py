@@ -1,11 +1,9 @@
-"""Write TRANSLATE_PENDING.txt with instructions for both Claude Code users
-and casual users (no API key, no CLI tools — use ChatGPT / Gemini web UI).
+"""Write TRANSLATE_PENDING.txt with instructions for Codex and web AI users.
 
 The pipeline writes this file when the translation step is reached and the
 expected translated transcript JSON does not yet exist on disk. The file is
-a self-contained set of instructions: the user picks Path A (Claude Code) or
-Path B (web AI), produces the translated JSON, and runs ``--resume`` to
-continue.
+a self-contained set of instructions: the user picks Path A (Codex) or
+Path B (web AI), produces the translated JSON, and continues the pipeline.
 """
 import os
 
@@ -52,26 +50,26 @@ Target language : {target_lang} ({target_name})
 Work directory  : {work_dir}
 
 The pipeline stopped at Step 4 because {out_file} does not exist yet.
-Pick ONE of the two paths below to create that file, then resume.
+Pick ONE of the two paths below to create that file and continue.
 
 
 ==============================================================
-PATH A — Claude Code users (or anyone with Claude subscription)
+PATH A — Codex users (ChatGPT desktop, CLI, or IDE extension)
 ==============================================================
 
-In Claude Code, say:
+In Codex, say:
 
-    Translate the transcript at {work_dir} to {target_name}.
+    Translate the transcript at {work_dir} to {target_name} and resume the pipeline.
 
-(or run the skill directly: /translate-video-segments)
+(or invoke: $translate-video-segments {work_dir})
 
 The translate-video-segments skill reads transcript_original.json, applies
-the same style rules shown below, and writes {out_file} with one "{out_field}"
-field added per segment.
+the same style rules shown below, writes {out_file} with one "{out_field}"
+field added per segment, validates it, and resumes the pipeline.
 
 
 ==============================================================
-PATH B — No API key, no Claude Code (ChatGPT / Gemini web UI)
+PATH B — No API key, no Codex (ChatGPT / Gemini web UI)
 ==============================================================
 
 1. Open transcript_original.json in this folder.

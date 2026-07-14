@@ -27,25 +27,31 @@ cp .env.example .env             # rồi điền key vào
 
 ## Hai cách dịch — chọn 1
 
-Bước dịch transcript là bước **duy nhất** cần can thiệp tay. Sau khi ASR xong, pipeline tự dừng và tạo file `TRANSLATE_PENDING.txt` trong work dir, chứa hướng dẫn cụ thể cho cả 2 cách dưới.
+Pipeline Python dừng sau bước ASR và tạo `TRANSLATE_PENDING.txt` trong work dir.
+Codex có thể tự xử lý bước dịch và resume; khi dùng web AI, đây là bước duy nhất
+cần can thiệp tay.
 
-### Cách A — Người dùng Claude Code (full auto)
+### Cách A — Codex trong ChatGPT (full auto)
 
-Mở repo trong [Claude Code](https://claude.com/claude-code) và bảo:
+Mở repo trong Codex (ứng dụng ChatGPT, CLI hoặc IDE extension) và bảo:
 
-> Translate the transcript at `output/VN/2026xxxx_vi` to Vietnamese.
+> Dịch transcript tại `output/VN/2026xxxx_vi` sang tiếng Việt và tiếp tục pipeline.
 
 Hoặc gọi skill trực tiếp:
 
 ```
-/translate-video-segments
+$translate-video-segments output/VN/2026xxxx_vi
 ```
 
-Skill đọc `transcript_original.json`, dịch theo style rules (xem `.claude/skills/translate-video-segments/`), ghi `transcript_vi.json`. Pipeline tự resume.
+Skill đọc `transcript_original.json`, áp dụng style rules, ghi và kiểm tra
+`transcript_vi.json`, sau đó tự resume. Skill nằm tại
+`.agents/skills/translate-video-segments/` và được commit cùng repo.
 
-Toàn bộ workflow từ link đến video xuất ra **chạy 1 lần — không cần can thiệp** vì Claude Code tự chạy `pipeline_vi.py` phase 1, gọi skill, rồi chạy `--resume`.
+Có thể đưa thẳng link hoặc file video cho Codex. Toàn bộ workflow từ link đến
+video xuất ra **chạy 1 lần — không cần can thiệp ở bước dịch** vì Codex tự chạy
+`pipeline_vi.py` phase 1, dịch transcript, kiểm tra JSON rồi chạy `--resume`.
 
-### Cách B — Không có Claude Code, không cần API key (ChatGPT / Gemini web)
+### Cách B — Không dùng Codex, không cần API key (ChatGPT / Gemini web)
 
 Khi pipeline dừng, mở `<work_dir>/TRANSLATE_PENDING.txt`. File này chứa sẵn một **prompt chuẩn** + hướng dẫn từng bước:
 
